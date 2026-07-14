@@ -283,7 +283,11 @@
     background: linear-gradient(160deg, rgba(0,0,0,0.05), rgba(0,0,0,0.55));
     z-index: 1;
   }
-  .gal-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .gal-media { position: absolute; inset: 0; z-index: 0; }
+  .gal-media .layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .8s ease; }
+  .gal-media .layer.active { opacity: 1; }
+  .gal-vidbadge { position: absolute; right: 12px; bottom: 12px; z-index: 2; font-size: 11px; color: #fff;
+    background: rgba(0,0,0,0.42); backdrop-filter: blur(4px); padding: 3px 9px; border-radius: 999px; letter-spacing: .03em; }
   .gal-loading { grid-column: 1 / -1; color: var(--ink-faint); font-size: 14px; padding: 30px 0; }
   .gal-cap { position: relative; z-index: 2; width: 100%; }
   .gal-cap .t { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
@@ -732,6 +736,9 @@ document.getElementById("dClose").addEventListener("click", function () {
   grid.innerHTML = '<div class="gal-loading">갤러리를 불러오는 중…</div>';
 
   const imgRe = /\.(jpe?g|png|webp|gif|avif)$/i;
+  const vidRe = /\.(mp4|webm|mov|m4v)$/i;
+  const mediaRe = /\.(jpe?g|png|webp|gif|avif|mp4|webm|mov|m4v)$/i;
+
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
@@ -740,18 +747,23 @@ document.getElementById("dClose").addEventListener("click", function () {
   function srcOf(name) {
     return "./" + GALLERY_DIR + "/" + name.split("/").map(encodeURIComponent).join("/");
   }
-  // 파일명이 "태그__제목__시기.jpg" 형식이면 파싱, 아니면 파일명을 제목으로
+  // 파일명이 "태그__제목__시기" 형식이면 파싱, 아니면 파일명을 제목으로
   function parseName(name) {
-    const base = name.replace(imgRe, "");
+    const base = name.replace(mediaRe, "");
     const p = base.split("__");
     if (p.length >= 2) {
-      return { tag: (p[0] || "").trim() || "기타", title: (p[1] || "").replace(/-/g, " ").trim(), when: (p[2] || "").replace(/-/g, " ").trim(), desc: "" };
+      return { tag: (p[0] || "").trim() || "기타", title: (p[1] || "").replace(/-/g, " ").trim(), when: (p[2] || "").replace(/-/g, " ").trim() };
     }
-    return { tag: "기타", title: base.replace(/[-_]/g, " "), when: "", desc: "" };
+    return { tag: "기타", title: base.replace(/[-_]/g, " "), when: "" };
   }
   async function fetchJSON(url) {
     try { const r = await fetch(url, { cache: "no-store" }); return r.ok ? await r.json() : null; }
     catch (e) { return null; }
+  }
+  // 활동 하나에 여러 미디어(영상/이미지) 묶음. media 배열 또는 단일 file 지원.
+  function mediaListOf(c) {
+    const raw = (Array.isArray(c.media) && c.media.length) ? c.media : (c.file ? [c.file] : []);
+    return raw.filter(Boolean);
   }
 
   async function load() {
@@ -761,20 +773,76 @@ document.getElementById("dClose").addEventListener("click", function () {
     ]);
     const captions = Array.isArray(caps) ? caps : [];
     const files = Array.isArray(listing)
-      ? listing.filter(function (f) { return f.type === "file" && imgRe.test(f.name); }).map(function (f) { return f.name; })
+      ? listing.filter(function (f) { return f.type === "file" && mediaRe.test(f.name); }).map(function (f) { return f.name; })
       : [];
     const fileSet = new Set(files);
-    const seedFiles = new Set(captions.map(function (c) { return c.file; }));
+    const claimed = new Set();
+    captions.forEach(function (c) { mediaListOf(c).forEach(function (n) { claimed.add(n); }); });
 
+    // 1) 캡션(활동) 카드 — 여러 미디어 묶음
     let items = captions.map(function (c) {
-      return { file: c.file, tag: c.tag || "기타", title: c.title || c.file, when: c.when || "", desc: c.desc || "", has: fileSet.has(c.file) };
+      const media = mediaListOf(c).map(function (n) {
+        return { name: n, isVideo: vidRe.test(n), has: fileSet.has(n) };
+      });
+      return {
+        tag: c.tag || "기타", title: c.title || (media[0] && media[0].name) || "", when: c.when || "", desc: c.desc || "",
+        media: media, anyHas: media.some(function (m) { return m.has; })
+      };
     });
-    files.filter(function (n) { return !seedFiles.has(n); }).forEach(function (n) {
+    // 2) 캡션에 없는 업로드 파일 — 각각 단일 카드
+    files.filter(function (n) { return !claimed.has(n); }).forEach(function (n) {
       const m = parseName(n);
-      items.push({ file: n, tag: m.tag, title: m.title, when: m.when, desc: m.desc, has: true });
+      items.push({ tag: m.tag, title: m.title, when: m.when, desc: "", media: [{ name: n, isVideo: vidRe.test(n), has: true }], anyHas: true });
     });
     items.forEach(function (it, i) { it.color = GAL_COLORS[i % GAL_COLORS.length]; });
     build(items);
+  }
+
+  function mediaHTML(it) {
+    const layers = it.media.filter(function (m) { return m.has; }).map(function (m) {
+      if (m.isVideo) {
+        return '<video class="layer gal-vid" muted loop playsinline preload="metadata" src="' + srcOf(m.name) + '"></video>';
+      }
+      return '<img class="layer gal-photo" loading="lazy" alt="' + esc(it.title) + '" src="' + srcOf(m.name) + '" onerror="this.remove()">';
+    }).join("");
+    const hasVid = it.media.some(function (m) { return m.has && m.isVideo; });
+    const badge = hasVid ? '<span class="gal-vidbadge">▶ 영상</span>' : "";
+    return layers ? ('<div class="gal-media">' + layers + "</div>" + badge) : "";
+  }
+
+  // 카드별 재생 로직: 이미지 여러 장이면 슬라이드, 영상이 있으면 카드가 풀 노출될 때 음소거 재생
+  function initCard(card) {
+    const media = card.querySelector(".gal-media");
+    if (!media) return;
+    const imgs = Array.prototype.slice.call(media.querySelectorAll("img.layer"));
+    const vid = media.querySelector("video.layer");
+    let idx = 0, slideT = null;
+    function showImg(i) { imgs.forEach(function (im, k) { im.classList.toggle("active", k === i); }); }
+    function startSlides() { if (imgs.length > 1 && !slideT) { slideT = setInterval(function () { idx = (idx + 1) % imgs.length; showImg(idx); }, 3000); } }
+    function stopSlides() { if (slideT) { clearInterval(slideT); slideT = null; } }
+
+    if (imgs.length) { showImg(0); startSlides(); }
+    else if (vid) { vid.classList.add("active"); }
+
+    if (vid) {
+      vid.muted = true;
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.intersectionRatio >= 0.9) {
+            stopSlides();
+            imgs.forEach(function (im) { im.classList.remove("active"); }); // 재생 중엔 이미지 숨김
+            vid.classList.add("active");
+            const pr = vid.play();
+            if (pr && pr.catch) pr.catch(function () {});
+          } else {
+            vid.pause();
+            vid.classList.remove("active");
+            if (imgs.length) { showImg(idx); startSlides(); } // 이미지로 복귀
+          }
+        });
+      }, { threshold: [0, 0.9, 1] });
+      io.observe(card);
+    }
   }
 
   function build(items) {
@@ -790,19 +858,17 @@ document.getElementById("dClose").addEventListener("click", function () {
         return;
       }
       grid.innerHTML = list.map(function (it) {
-        const img = it.has
-          ? '<img class="gal-photo" loading="lazy" alt="' + esc(it.title) + '" src="' + srcOf(it.file) + '" onerror="this.remove()">'
-          : "";
         const meta = (it.when || it.desc)
           ? (esc(it.when) + (it.when && it.desc ? " · " : "") + esc(it.desc))
           : "캡션 미입력 — captions.json에서 추가";
-        return '<div class="gal-item" style="background:' + it.color + '">' + img +
+        return '<div class="gal-item" style="background:' + it.color + '">' + mediaHTML(it) +
           '<span class="gal-tag">' + esc(it.tag) + "</span>" +
           '<div class="gal-cap"><div class="t">' + esc(it.title) + "</div>" +
           '<div class="meta">' + meta + "</div></div></div>";
       }).join("");
       grid.querySelectorAll(".gal-item").forEach(function (el) {
         el.addEventListener("click", function () { el.classList.toggle("open"); });
+        initCard(el);
       });
     }
     render("전체");
