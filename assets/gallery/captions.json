@@ -1,0 +1,9 @@
+[
+  { "file": "uzbekistan.jpg",       "tag": "지역사회", "title": "우즈베키스탄 청년해외봉사단",       "when": "2025 여름", "desc": "현지 기획에 진심을 쏟는 즐거움을 발견 — 사회공헌 커리어를 결심하다." },
+  { "file": "homeless-worldcup.jpg", "tag": "지역사회", "title": "홈리스월드컵 팀매니저",             "when": "2025 봄",   "desc": "이 인연이 해외봉사단 면접으로 이어졌다." },
+  { "file": "tree-planting.jpg",     "tag": "지역사회", "title": "서울 동행정원 — 여의도 나무심기", "when": "2024 가을", "desc": "베고니아를 받아온 날 — 기르는 취미의 출발점." },
+  { "file": "gardening-crew.jpg",    "tag": "커뮤니티", "title": "서울 가드닝크루 — 경의선 숲길",   "when": "2025 봄",   "desc": "식물 취미가 커뮤니티로 확장. 튤립 구근이 봄에 꽃을 피웠다." },
+  { "file": "dog-volunteer.jpg",     "tag": "지역사회", "title": "유기견 봉사",                       "when": "2025 봄",   "desc": "생명을 돌보는 하루하루." },
+  { "file": "beach-cleanup.jpg",     "tag": "지역사회", "title": "해변 정화 활동",                   "when": "2025 봄",   "desc": "지역과 자연을 함께 돌보다." },
+  { "file": "changefinder.jpg",      "tag": "교육봉사", "title": "체인지파인더 교육",                 "when": "2025 가을", "desc": "사회공헌 커리어 준비를 본격화 — 키르기스스탄의 친구를 현직 활동가로 다시 만나다." }
+]
