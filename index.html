@@ -486,11 +486,10 @@
     </div>
     <p class="gal-intro">
       회사 밖에서도 사회문제 앞에 계속 서 있었습니다. 봉사·지역·커뮤니티 현장의 기록입니다.
-      이미지를 누르면 활동 정보가 펼쳐집니다. <span style="color:var(--ink-faint)">(우대사항 — 사회문제 해결을 위한 다양한 도전)</span>
+      이미지를 누르면 활동 정보가 펼쳐집니다.
     </p>
     <div class="filters" id="filters"></div>
     <div class="gal-grid" id="galGrid"></div>
-    <p class="gal-empty-note">※ 사진은 저장소 <code>assets/gallery</code> 폴더에 올리면 자동 반영됩니다 (모바일 GitHub에서 업로드 → 새로고침). 방법은 같은 폴더의 README 참고.</p>
   </div>
 </section>
 
@@ -504,7 +503,7 @@
       <a href="#">이력서 (PDF)</a>
       <a href="#">LinkedIn</a>
     </div>
-    <div class="copy">© 2026 다영 · 소셜임팩트 포트폴리오 · 손글씨 배경/활동 이미지는 교체 예정</div>
+    <div class="copy">© 2026 다영 · 소셜임팩트 포트폴리오</div>
   </div>
 </footer>
 
@@ -694,7 +693,7 @@ const dBarLabel = document.getElementById("dBarLabel");
 // 프로젝트 상세페이지용 미디어(갤러리 폴더의 사진/영상). media 없으면 자리 표시.
 function detailMediaHTML(p) {
   if (!p.media || !p.media.length) {
-    return '<div class="visual-slot">비주얼 자리 · 사진 / 스크린샷 / 다이어그램 (추후 삽입)</div>';
+    return "";
   }
   const items = p.media.map(function (name) {
     const src = "./" + GALLERY_DIR + "/" + name.split("/").map(encodeURIComponent).join("/");
@@ -886,13 +885,13 @@ document.getElementById("dClose").addEventListener("click", function () {
     function render(tag) {
       const list = items.filter(function (it) { return tag === "전체" || it.tag === tag; });
       if (!list.length) {
-        grid.innerHTML = '<div class="gal-loading">아직 사진이 없어요. assets/gallery 폴더에 업로드하면 여기에 나타납니다.</div>';
+        grid.innerHTML = '<div class="gal-loading">표시할 항목이 없습니다.</div>';
         return;
       }
       grid.innerHTML = list.map(function (it) {
         const meta = (it.when || it.desc)
           ? (esc(it.when) + (it.when && it.desc ? " · " : "") + esc(it.desc))
-          : "캡션 미입력 — captions.json에서 추가";
+          : "";
         return '<div class="gal-item" style="background:' + it.color + '">' + mediaHTML(it) +
           '<span class="gal-tag">' + esc(it.tag) + "</span>" +
           '<div class="gal-cap"><div class="t">' + esc(it.title) + "</div>" +
