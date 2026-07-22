@@ -368,6 +368,10 @@
     color: var(--ink-faint); font-size: 13px; letter-spacing: .05em;
     background: var(--bg-soft);
   }
+  .d-media { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .d-media .d-mediaitem { width: 100%; height: 240px; object-fit: cover; border-radius: 6px; display: block; background: var(--bg-soft); }
+  .d-media .d-mediavid { grid-column: 1 / -1; height: auto; max-height: 70vh; object-fit: contain; background: #000; }
+  @media (max-width: 560px) { .d-media { grid-template-columns: 1fr; } }
   .d-next {
     margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--line);
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
@@ -523,6 +527,7 @@ const PROJECTS = [
     period: "2025 여름 · 청년해외봉사단",
     teaser: "언어가 통하지 않는 현장에서, 아이들의 '몸'을 리서치했습니다.",
     signature: "비언어 관찰 리서치",
+    media: ["1753427515512.jpg", "20250729_173853.jpg", "20250807_135241.jpg"],
     badges: [
       { n: "80점+", l: "개소식 만족도" },
       { n: "1년", l: "후 지역 유동인구 활성화" },
@@ -548,6 +553,7 @@ const PROJECTS = [
     period: "2025 여름 ~ 2026 봄",
     teaser: "일방적 교육이 아니라, 참여자가 스스로 도전하게 만드는 프로그램을 설계했습니다.",
     signature: "참여자 → 기획자 → 리더",
+    media: ["20260621_140937.mp4", "1782049123480.jpg", "Screenshot_20260715_000550_Instagram.jpg", "1780150303800.JPG", "1780719835308.jpg"],
     badges: [
       { n: "참여자→리더", l: "커뮤니티 내 역할 전환" },
       { n: "리트릿캠프", l: "운영·기획 주도" },
@@ -685,6 +691,21 @@ const detail = document.getElementById("detail");
 const detailInner = document.getElementById("detailInner");
 const dBarLabel = document.getElementById("dBarLabel");
 
+// 프로젝트 상세페이지용 미디어(갤러리 폴더의 사진/영상). media 없으면 자리 표시.
+function detailMediaHTML(p) {
+  if (!p.media || !p.media.length) {
+    return '<div class="visual-slot">비주얼 자리 · 사진 / 스크린샷 / 다이어그램 (추후 삽입)</div>';
+  }
+  const items = p.media.map(function (name) {
+    const src = "./" + GALLERY_DIR + "/" + name.split("/").map(encodeURIComponent).join("/");
+    if (/\.(mp4|webm|mov|m4v)$/i.test(name)) {
+      return '<video class="d-mediaitem d-mediavid" src="' + src + '" muted loop playsinline controls autoplay preload="metadata"></video>';
+    }
+    return '<img class="d-mediaitem" loading="lazy" src="' + src + '" alt="' + p.title + '" onerror="this.remove()">';
+  }).join("");
+  return '<div class="d-media">' + items + "</div>";
+}
+
 function openDetail(i) {
   const p = PROJECTS[i];
   const next = PROJECTS[(i + 1) % PROJECTS.length];
@@ -710,7 +731,7 @@ function openDetail(i) {
       p.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") +
     "</ol></div>" +
     '<div class="d-block"><div class="lab">성과</div><p>' + p.outcome + "</p>" +
-      '<div class="visual-slot">비주얼 자리 · 사진 / 스크린샷 / 다이어그램 (추후 삽입)</div>' +
+      detailMediaHTML(p) +
     "</div>" +
     '<div class="d-next" data-next="' + ((i + 1) % PROJECTS.length) + '">' +
       '<div><div class="lab2">NEXT PROJECT</div><div class="nm">' + next.title + "</div></div>" +
@@ -727,6 +748,7 @@ function openDetail(i) {
 document.getElementById("dClose").addEventListener("click", function () {
   detail.classList.remove("open");
   document.body.style.overflow = "";
+  detailInner.querySelectorAll("video").forEach(function (v) { v.pause(); });
 });
 
 /* ===================== Gallery (저장소 폴더에서 로드) ===================== */
@@ -765,6 +787,14 @@ document.getElementById("dClose").addEventListener("click", function () {
     const raw = (Array.isArray(c.media) && c.media.length) ? c.media : (c.file ? [c.file] : []);
     return raw.filter(Boolean);
   }
+  // "2025 여름" 같은 when 문자열 → 정렬 점수(연도*100 + 계절). 최신일수록 큼.
+  function whenScore(when) {
+    if (!when) return 0;
+    const years = String(when).match(/\d{4}/g);
+    const y = years ? Math.max.apply(null, years.map(Number)) : 0;
+    const s = /겨울/.test(when) ? 12 : /가을/.test(when) ? 9 : /여름/.test(when) ? 6 : /봄/.test(when) ? 3 : 0;
+    return y * 100 + s;
+  }
 
   async function load() {
     const [caps, listing] = await Promise.all([
@@ -794,6 +824,8 @@ document.getElementById("dClose").addEventListener("click", function () {
       const m = parseName(n);
       items.push({ tag: m.tag, title: m.title, when: m.when, desc: "", media: [{ name: n, isVideo: vidRe.test(n), has: true }], anyHas: true });
     });
+    // 최신순 → 오래된 순 정렬 (연도·계절 기준)
+    items.sort(function (a, b) { return whenScore(b.when) - whenScore(a.when); });
     items.forEach(function (it, i) { it.color = GAL_COLORS[i % GAL_COLORS.length]; });
     build(items);
   }
