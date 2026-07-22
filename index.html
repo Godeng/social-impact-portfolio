@@ -372,6 +372,9 @@
   .d-media .d-mediaitem { width: 100%; height: 240px; object-fit: cover; border-radius: 6px; display: block; background: var(--bg-soft); }
   .d-media .d-mediavid { grid-column: 1 / -1; height: auto; max-height: 70vh; object-fit: contain; background: #000; }
   @media (max-width: 560px) { .d-media { grid-template-columns: 1fr; } }
+  .d-youtube { position: relative; margin-top: 16px; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: #000; }
+  .d-youtube iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .d-youtube-cap { margin-top: 8px; font-size: 12.5px; color: var(--ink-faint); }
   .d-next {
     margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--line);
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
@@ -527,6 +530,7 @@ const PROJECTS = [
     teaser: "언어가 통하지 않는 현장에서, 아이들의 '몸'을 리서치했습니다.",
     signature: "비언어 관찰 리서치",
     media: ["1753427515512.jpg", "20250729_173853.jpg", "20250807_135241.jpg"],
+    youtube: { id: "fO0JXil0Qrg", start: 1720, cap: "서울시 청년 해외봉사단 3기 in 우즈베키스탄, 라오스 (28:40부터)" },
     badges: [
       { n: "80점+", l: "개소식 만족도" },
       { n: "1년", l: "후 지역 유동인구 활성화" },
@@ -705,6 +709,15 @@ function detailMediaHTML(p) {
   return '<div class="d-media">' + items + "</div>";
 }
 
+// 유튜브 임베드(선택). {id, start(초), cap} — start 지점부터 재생.
+function detailYouTubeHTML(p) {
+  if (!p.youtube || !p.youtube.id) return "";
+  const q = "?rel=0" + (p.youtube.start ? "&start=" + p.youtube.start : "");
+  const cap = p.youtube.cap ? '<div class="d-youtube-cap">▶ ' + p.youtube.cap + "</div>" : "";
+  return '<div class="d-youtube"><iframe src="https://www.youtube.com/embed/' + p.youtube.id + q +
+    '" title="' + (p.title || "") + '" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>' + cap;
+}
+
 function openDetail(i) {
   const p = PROJECTS[i];
   const next = PROJECTS[(i + 1) % PROJECTS.length];
@@ -730,6 +743,7 @@ function openDetail(i) {
       p.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") +
     "</ol></div>" +
     '<div class="d-block"><div class="lab">성과</div><p>' + p.outcome + "</p>" +
+      detailYouTubeHTML(p) +
       detailMediaHTML(p) +
     "</div>" +
     '<div class="d-next" data-next="' + ((i + 1) % PROJECTS.length) + '">' +
@@ -748,6 +762,7 @@ document.getElementById("dClose").addEventListener("click", function () {
   detail.classList.remove("open");
   document.body.style.overflow = "";
   detailInner.querySelectorAll("video").forEach(function (v) { v.pause(); });
+  detailInner.querySelectorAll("iframe").forEach(function (f) { f.src = f.src; }); // 유튜브 정지
 });
 
 /* ===================== Gallery (저장소 폴더에서 로드) ===================== */
