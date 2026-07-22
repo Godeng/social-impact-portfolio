@@ -725,7 +725,7 @@ function detailMediaHTML(p) {
     if (/\.(mp4|webm|mov|m4v)$/i.test(name)) {
       return '<video class="d-mediaitem d-mediavid" src="' + src + '" muted loop playsinline controls autoplay preload="metadata"></video>';
     }
-    return '<img class="d-mediaitem" loading="lazy" src="' + src + '" alt="' + p.title + '" onerror="this.remove()">';
+    return '<img class="d-mediaitem" src="' + src + '" alt="' + p.title + '" onerror="this.remove()">';
   }).join("");
   return '<div class="d-media">' + items + "</div>";
 }
@@ -744,7 +744,7 @@ function detailFiguresHTML(p) {
   if (!p.figures || !p.figures.length) return "";
   const figs = p.figures.map(function (f) {
     const src = f.image ? "./" + f.image.split("/").map(encodeURIComponent).join("/") : "";
-    const img = src ? '<img loading="lazy" src="' + src + '" alt="' + (f.label || "") + '" onerror="this.style.display=\'none\'">' : "";
+    const img = src ? '<img src="' + src + '" alt="' + (f.label || "") + '" onerror="this.style.display=\'none\'">' : "";
     return '<figure class="d-fig">' + img + (f.label ? '<figcaption>' + f.label + "</figcaption>" : "") + "</figure>";
   }).join("");
   return '<div class="d-figs">' + figs + "</div>";
