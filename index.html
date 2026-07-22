@@ -384,6 +384,10 @@
   .d-linkcard .lc-meta { margin-top: 3px; font-size: 12px; opacity: 0.72; }
   .d-linkcard .lc-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; background: #fff; color: #1c1a17; font-weight: 700; font-size: 14px; padding: 10px 18px; border-radius: 999px; text-decoration: none; transition: transform .2s; }
   .d-linkcard .lc-btn:hover { transform: translateX(3px); }
+  .d-figs { margin-top: 16px; display: flex; flex-direction: column; gap: 22px; }
+  .d-fig { margin: 0; text-align: center; }
+  .d-fig img { display: block; margin: 0 auto; max-width: 100%; max-height: 520px; width: auto; height: auto; border-radius: 6px; border: 1px solid var(--line); background: var(--bg-soft); }
+  .d-fig figcaption { margin-top: 10px; font-size: 13.5px; font-weight: 600; color: var(--ink-soft); }
   .d-next {
     margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--line);
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
@@ -619,6 +623,10 @@ const PROJECTS = [
     period: "카카오모빌리티 · 카카오 T 비즈니스",
     teaser: "큰 자원을 쏟은 프로젝트보다 더 기억에 남는 두 달 — 입력창 몇 개로 특정 유저군의 가입률을 끌어올렸습니다.",
     signature: "유저 직접 인터뷰 → 가입 재설계",
+    figures: [
+      { label: "① 가입 전에도 서비스가 보이게 — 소개 배너 + '월별 정산서 발송' 기능 노출", image: "assets/gallery/kakaomobility_1.png" },
+      { label: "② 개인사업자 가입 시 입력 최소화 — 입력창 제거로 최대 10개 → 3개", image: "assets/gallery/kakaomobility_2.png" },
+    ],
     badges: [
       { n: "+50%p", l: "개인사업자 가입 비중 상승 (런칭 1개월, 전월 대비)" },
       { n: "10→3", l: "가입 입력 항목 축소 (최대 10개 → 3개)" },
@@ -731,6 +739,17 @@ function detailYouTubeHTML(p) {
     '" title="' + (p.title || "") + '" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>' + cap;
 }
 
+// 라벨 달린 도판 묶음(변화 방향 등). figures: [{label, image}]
+function detailFiguresHTML(p) {
+  if (!p.figures || !p.figures.length) return "";
+  const figs = p.figures.map(function (f) {
+    const src = f.image ? "./" + f.image.split("/").map(encodeURIComponent).join("/") : "";
+    const img = src ? '<img loading="lazy" src="' + src + '" alt="' + (f.label || "") + '" onerror="this.style.display=\'none\'">' : "";
+    return '<figure class="d-fig">' + img + (f.label ? '<figcaption>' + f.label + "</figcaption>" : "") + "</figure>";
+  }).join("");
+  return '<div class="d-figs">' + figs + "</div>";
+}
+
 // 외부 인터뷰/기사 하이라이트 카드(iframe 불가한 링크용). {image, quote, sub, meta, url}
 function detailLinkHTML(p) {
   if (!p.link || !p.link.url) return "";
@@ -772,6 +791,7 @@ function openDetail(i) {
     '<div class="d-block"><div class="lab">성과</div><p>' + p.outcome + "</p>" +
       detailYouTubeHTML(p) +
       detailLinkHTML(p) +
+      detailFiguresHTML(p) +
       detailMediaHTML(p) +
     "</div>" +
     '<div class="d-next" data-next="' + ((i + 1) % PROJECTS.length) + '">' +
@@ -853,6 +873,7 @@ document.getElementById("dClose").addEventListener("click", function () {
     // 프로젝트 상세 전용 이미지(인터뷰 카드 등)는 갤러리 카드로 노출하지 않음
     (typeof PROJECTS !== "undefined" ? PROJECTS : []).forEach(function (pp) {
       if (pp.link && pp.link.image) claimed.add(pp.link.image.split("/").pop());
+      (pp.figures || []).forEach(function (f) { if (f.image) claimed.add(f.image.split("/").pop()); });
     });
 
     // 1) 캡션(활동) 카드 — 여러 미디어 묶음
