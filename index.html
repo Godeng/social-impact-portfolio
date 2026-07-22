@@ -375,6 +375,15 @@
   .d-youtube { position: relative; margin-top: 16px; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: #000; }
   .d-youtube iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .d-youtube-cap { margin-top: 8px; font-size: 12.5px; color: var(--ink-faint); }
+  .d-linkcard { position: relative; margin-top: 16px; border-radius: 8px; overflow: hidden; min-height: 340px; display: flex; align-items: flex-end; color: #fff; background: #1c1a17; }
+  .d-linkcard .lc-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .d-linkcard::before { content: ""; position: absolute; inset: 0; background: linear-gradient(155deg, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.82) 100%); z-index: 1; }
+  .d-linkcard .lc-body { position: relative; z-index: 2; padding: 28px; width: 100%; }
+  .d-linkcard .lc-quote { font-size: clamp(20px, 3.4vw, 30px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.28; }
+  .d-linkcard .lc-sub { margin-top: 12px; font-size: 14.5px; font-weight: 600; opacity: 0.95; }
+  .d-linkcard .lc-meta { margin-top: 3px; font-size: 12px; opacity: 0.72; }
+  .d-linkcard .lc-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 20px; background: #fff; color: #1c1a17; font-weight: 700; font-size: 14px; padding: 10px 18px; border-radius: 999px; text-decoration: none; transition: transform .2s; }
+  .d-linkcard .lc-btn:hover { transform: translateX(3px); }
   .d-next {
     margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--line);
     display: flex; justify-content: space-between; align-items: center; gap: 16px;
@@ -579,27 +588,34 @@ const PROJECTS = [
   {
     id: "barogo",
     title: "바로고 상점주향 배달 접수 POS IA 개편",
-    role: "PM · 정보구조(IA) 설계",
-    period: "바로고 재직 중",
-    teaser: "회의실이 아니라 매장에서 답을 찾았습니다.",
-    signature: "현장 관찰 → 부서 조율",
+    role: "서비스 기획 · 프로덕트 디자인팀",
+    period: "2020 · 바로고",
+    teaser: "POS에 대여섯 개를 띄우고 탭을 오가던 사장님들 — 그 전환을 없애는 게 목표였습니다.",
+    signature: "탭 전환 최소화 · 다채널 통합",
+    link: {
+      image: "assets/gallery/barogo-interview.png",
+      quote: "사장님을 위한 프로그램을 만들고 싶어요!",
+      sub: "바로고 R&D기획 오다영 프로 인터뷰",
+      meta: "바로고 공식 블로그 · 바로레터 29 · 2020.12",
+      url: "https://blog.naver.com/barogo_info/222190461509"
+    },
     badges: [
-      { n: "20%", l: "핵심 기능 재발견" },
-      { n: "3개 부서", l: "이견 조율·합의 도출" },
-      { n: "↓", l: "접수 플로우 단계 단축" },
+      { n: "5→3%", l: "프린터 연결 문의 감소 (연결 가이드)" },
+      { n: "다채널", l: "여러 주문앱·배달대행 통합 접수" },
+      { n: "자동입력", l: "주소·전화 오입력 방지" },
     ],
     problem:
-      "상점주가 실제로 쓰는 방식과 배달 접수 POS의 화면 구조가 어긋나 있었습니다. 자주 쓰는 기능이 깊이 숨어 있고, 안 쓰는 기능이 앞에 있었습니다.",
-    before: "회의실에서 가설로 화면 구조를 정의",
-    after: "매장 현장에서 상점주의 실제 접수 행동을 관찰",
+      "배달 전문점 사장님은 POS에 주문앱·배달대행 프로그램을 대여섯 개씩 띄워두고, 탭 전환 키로 화면을 계속 오가며 영업했습니다. 주소·전화번호를 옮겨 적다 실수도 잦았죠.",
+    before: "요청받은 기능 목록 기준으로 우선순위를 정의",
+    after: "사장님이 실제로 POS를 쓰는 모습을 관찰 — 탭 전환·자동입력 니즈를 발견",
     steps: [
-      "여러 매장을 방문해 상점주의 실사용 패턴을 관찰",
-      "실제로 자주 쓰는 핵심 기능을 데이터로 도출",
-      "사용 빈도 기준으로 IA를 재구조화",
-      "개발·운영·영업 부서 간 이견을 조율해 합의 도출",
+      "사장님 POS 사용 관찰 — 주문앱·배달대행 대여섯 개를 탭 전환하며 영업",
+      "여러 주문채널을 연결하고 접수를 자동 입력하는 통합 구조 설계",
+      "운영·영업팀 요청을 제품 방향에 맞춰 우선순위 조율 (제품의 대변자)",
+      "영수증 프린터 연결 가이드 등 온보딩 개선 + 일부 매장 테스트 운영",
     ],
     outcome:
-      "묻혀 있던 핵심 기능의 약 20%를 실사용 기준으로 다시 전면에 배치하고, 접수 플로우를 단축했습니다.",
+      "영수증 프린터 연결 문의를 5%→3%로 낮추고, 여러 프로그램을 오가던 접수를 하나로 통합. 일부 매장에서 테스트 운영하며 확대를 준비했습니다.",
   },
   {
     id: "kakao",
@@ -719,6 +735,20 @@ function detailYouTubeHTML(p) {
     '" title="' + (p.title || "") + '" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>' + cap;
 }
 
+// 외부 인터뷰/기사 하이라이트 카드(iframe 불가한 링크용). {image, quote, sub, meta, url}
+function detailLinkHTML(p) {
+  if (!p.link || !p.link.url) return "";
+  const L = p.link;
+  const img = L.image ? '<img class="lc-img" src="./' + L.image.split("/").map(encodeURIComponent).join("/") + '" alt="" onerror="this.remove()">' : "";
+  return '<div class="d-linkcard">' + img +
+    '<div class="lc-body">' +
+      (L.quote ? '<div class="lc-quote">“' + L.quote + '”</div>' : "") +
+      (L.sub ? '<div class="lc-sub">' + L.sub + "</div>" : "") +
+      (L.meta ? '<div class="lc-meta">' + L.meta + "</div>" : "") +
+      '<a class="lc-btn" href="' + L.url + '" target="_blank" rel="noopener">인터뷰 전문 읽기 →</a>' +
+    "</div></div>";
+}
+
 function openDetail(i) {
   const p = PROJECTS[i];
   const next = PROJECTS[(i + 1) % PROJECTS.length];
@@ -745,6 +775,7 @@ function openDetail(i) {
     "</ol></div>" +
     '<div class="d-block"><div class="lab">성과</div><p>' + p.outcome + "</p>" +
       detailYouTubeHTML(p) +
+      detailLinkHTML(p) +
       detailMediaHTML(p) +
     "</div>" +
     '<div class="d-next" data-next="' + ((i + 1) % PROJECTS.length) + '">' +
@@ -823,6 +854,10 @@ document.getElementById("dClose").addEventListener("click", function () {
     const fileSet = new Set(files);
     const claimed = new Set();
     captions.forEach(function (c) { mediaListOf(c).forEach(function (n) { claimed.add(n); }); });
+    // 프로젝트 상세 전용 이미지(인터뷰 카드 등)는 갤러리 카드로 노출하지 않음
+    (typeof PROJECTS !== "undefined" ? PROJECTS : []).forEach(function (pp) {
+      if (pp.link && pp.link.image) claimed.add(pp.link.image.split("/").pop());
+    });
 
     // 1) 캡션(활동) 카드 — 여러 미디어 묶음
     let items = captions.map(function (c) {
