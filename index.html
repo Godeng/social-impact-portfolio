@@ -308,6 +308,18 @@
   footer a:hover { border-color: var(--ink); }
   footer .copy { margin-top: 50px; font-size: 12px; color: var(--ink-faint); }
 
+  /* ---------- APPLY (지원 동기) ---------- */
+  .apply-lead { font-size: 17px; color: var(--ink-soft); margin-bottom: 44px; }
+  .pitch-list { display: flex; flex-direction: column; }
+  .pitch-item { display: grid; grid-template-columns: 56px 1fr; gap: 20px; padding: 30px 0; border-top: 1px solid var(--line); }
+  .pitch-item:last-child { border-bottom: 1px solid var(--line); }
+  .pitch-num { font-size: 32px; font-weight: 800; color: var(--coral); line-height: 1; letter-spacing: -0.03em; }
+  .pitch-body h3 { font-size: clamp(18px, 2.6vw, 23px); font-weight: 700; letter-spacing: -0.02em; }
+  .pitch-body p { margin-top: 12px; font-size: 15.5px; color: var(--ink-soft); line-height: 1.78; }
+  .pitch-body .tags { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .pitch-body .tags span { font-size: 12px; color: var(--ink-soft); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
+  @media (max-width: 560px) { .pitch-item { grid-template-columns: 1fr; gap: 8px; } }
+
   /* ---------- PROJECT DETAIL (overlay) ---------- */
   .detail {
     position: fixed; inset: 0; z-index: 100;
@@ -501,6 +513,40 @@
     </p>
     <div class="filters" id="filters"></div>
     <div class="gal-grid" id="galGrid"></div>
+  </div>
+</section>
+
+<!-- ===================== APPLY (지원 동기) ===================== -->
+<section class="block" id="apply">
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom:16px">
+      <span class="eyebrow">To. 행복나눔재단</span>
+      <h2>사람을 위한 기획을, <span class="accent">회사에서도</span> 하고 싶다.</h2>
+    </div>
+    <p class="apply-lead">행복나눔재단에서 일하고 싶은 이유입니다.</p>
+    <div class="pitch-list">
+      <div class="pitch-item">
+        <div class="pitch-num">01</div>
+        <div class="pitch-body">
+          <h3>새로운 서비스를 만들고 싶다면, 도와줄게요!</h3>
+          <p>SUNNY SCHOLAR 문제해결 방식의 단골 소재로 등장하는 서비스 빌딩. 만들고 싶은 서비스가 기간 내에 가능할지, SUNNY 운영국은 어떤 것을 도와줄 수 있을지, AI를 활용해 서비스를 만들 수 있을지 — IT 대기업에서 일 100만 명이 방문하는 서비스를 만들거나 운영했던 실무 경험을 바탕으로 필요한 도움을 제공할 수 있어요.</p>
+        </div>
+      </div>
+      <div class="pitch-item">
+        <div class="pitch-num">02</div>
+        <div class="pitch-body">
+          <h3>청년사업의 조력자가 필요하다면 데려올게요!</h3>
+          <p>회사 밖에서의 일 년 동안 공익활동의 생산자와 참여자를 다양하게 만났어요. 서울시 공익활동지원센터 체인지파인더 수료생들과 서울청년해외봉사단 3기생들, 청년정책네트워크 활동가들, 세이브더칠드런 정책 담당자, 카카오뱅크 에코캠프 기획자, 우먼스베이스캠프 운영진들까지 — 행복나눔재단의 활동 규모를 키우거나, 새로운 시도를 함께할 협력 조직이 필요할 때 찾아올게요.</p>
+        </div>
+      </div>
+      <div class="pitch-item">
+        <div class="pitch-num">03</div>
+        <div class="pitch-body">
+          <h3>즐겁게 일할게요!</h3>
+          <p>즐기는 자를 이기지 못할 거예요. 해외 봉사 한 달간 아침마다 ‘나는 어린이들이 즐겁게 놀 수 있는 놀이터를 만들 것이다’라는 문장을 쓰며 잠을 깨고, 현장 일정이 종료된 후 숙소에서 필요한 계획을 정리했습니다. 진심으로 몰입할 수 있었던 시간이었습니다. 업무가 가치와 일치하는 행복나눔재단에서도 몰입하여 일하는 시간을 보낼 수 있을 것으로 기대하고 있습니다.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
