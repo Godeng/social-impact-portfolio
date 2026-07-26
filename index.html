@@ -233,6 +233,14 @@
     font-weight: 700;
     letter-spacing: -0.02em;
   }
+  .proj-role {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
   .proj-main p { font-size: 14.5px; color: var(--ink-soft); margin-top: 6px; }
   .proj-main .signature {
     display: inline-block; margin-top: 12px;
@@ -732,6 +740,12 @@ function openProject(id) {
   const i = PROJECTS.findIndex(function (p) { return p.id === id; });
   if (i >= 0) openDetail(i);
 }
+/* 타이틀을 "역할/소속 — 프로젝트명"으로 분리 */
+function splitTitle(t) {
+  const idx = t.indexOf("—");
+  if (idx === -1) return { role: "", name: t.trim() };
+  return { role: t.slice(0, idx).trim(), name: t.slice(idx + 1).trim() };
+}
 
 /* 갤러리 콘텐츠는 코드가 아니라 저장소의 assets/gallery 폴더에서 읽어옵니다.
    - 사진 추가: 그 폴더에 이미지 업로드(모바일 GitHub) → 자동 반영
@@ -795,7 +809,7 @@ const HERO_IMAGES = ["hero_2.jpg", "hero_7.jpg", "hero_4.jpg", "hero_1.jpg", "he
       '<button class="proj-row" data-i="' + i + '">' +
         '<span class="proj-idx">0' + (i + 1) + '</span>' +
         '<span class="proj-main">' +
-          "<h3>" + p.title + "</h3>" +
+          "<h3>" + (function (s) { return (s.role ? '<span class="proj-role">' + s.role + "</span>" : "") + s.name; })(splitTitle(p.title)) + "</h3>" +
           "<p>" + p.teaser + "</p>" +
           '<span class="signature">' + p.signature + "</span>" +
         "</span>" +
@@ -870,7 +884,7 @@ function openDetail(i) {
   dBarLabel.textContent = "Project 0" + (i + 1) + " / 0" + PROJECTS.length;
   detailInner.innerHTML =
     '<div class="d-role"><b>' + p.role + "</b><span>·</span><span>" + p.period + "</span></div>" +
-    "<h2>" + p.title + "</h2>" +
+    "<h2>" + splitTitle(p.title).name + "</h2>" +
     '<div class="badges">' +
       p.badges.map(function (b) {
         return '<div class="badge"><div class="b-num">' + b.n + '</div><div class="b-lab">' + b.l + "</div></div>";
@@ -895,7 +909,7 @@ function openDetail(i) {
       detailMediaHTML(p) +
     "</div>" +
     '<div class="d-next" data-next="' + ((i + 1) % PROJECTS.length) + '">' +
-      '<div><div class="lab2">NEXT PROJECT</div><div class="nm">' + next.title + "</div></div>" +
+      '<div><div class="lab2">NEXT PROJECT</div><div class="nm">' + splitTitle(next.title).name + "</div></div>" +
       '<div class="arw2">→</div>' +
     "</div>";
   detailInner.querySelector(".d-next").addEventListener("click", function (e) {
