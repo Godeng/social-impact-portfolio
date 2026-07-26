@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>진심 — 사람을 향한 기획</title>
+<title>사람이 보이는 기획 — 다영 포트폴리오</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 <link
   rel="stylesheet"
@@ -108,10 +108,11 @@
     will-change: transform;
   }
   .hero-word {
-    font-size: clamp(96px, 24vw, 340px);
+    font-size: clamp(40px, 8.5vw, 112px);
     font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 0.9;
+    letter-spacing: -0.03em;
+    line-height: 1.06;
+    text-wrap: balance;
     background: linear-gradient(180deg, #2b2620 0%, #c1553d 135%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -466,8 +467,7 @@
 <header id="hero">
   <div class="hs-layer" id="hsLayer"></div>
   <div class="hero-core" id="heroCore">
-    <div class="hero-word">진심</div>
-    <p class="hero-sub" id="heroSub">문제는 풀 수 있습니다.<br />그 대상이 <b>사람</b>이기를 바랍니다.</p>
+    <div class="hero-word">사람이 보이는 기획</div>
   </div>
   <div class="hero-hint" id="heroHint">CLICK</div>
 </header>
@@ -610,12 +610,7 @@
 <!-- ===================== FOOTER ===================== -->
 <footer>
   <div class="wrap">
-    <span class="eyebrow">Contact</span>
-    <h4>사람을 향한 기획, 함께 할 수 있다면.</h4>
-    <div class="foot-links">
-      <a href="https://www.linkedin.com/in/dayoung-oh-362a34161" target="_blank" rel="noopener">LinkedIn</a>
-    </div>
-    <div class="copy">© 2026 다영 · 소셜임팩트 포트폴리오</div>
+    <div class="copy">© 2026 다영</div>
   </div>
 </footer>
 
@@ -852,10 +847,10 @@ const HERO_IMAGES = ["hero_2.jpg", "hero_7.jpg", "hero_4.jpg", "hero_1.jpg", "he
     core.style.transform = "translate(" + cx * -22 + "px," + cy * -22 + "px)";
   });
 
-  // 클릭 시 서브텍스트 리빌
+  // 클릭 시 하단 블록(지원 동기)으로 스크롤
   hero.addEventListener("click", function () {
-    sub.classList.toggle("show");
-    hint.style.opacity = sub.classList.contains("show") ? "0" : "";
+    var t = document.getElementById("apply");
+    if (t) t.scrollIntoView({ behavior: "smooth" });
   });
 })();
 
