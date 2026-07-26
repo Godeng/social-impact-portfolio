@@ -88,21 +88,18 @@
   /* 손글씨 배경 레이어 */
   .hs-layer {
     position: absolute;
-    inset: -12% -12%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 8px 48px;
-    align-content: center;
+    inset: 0;
+    overflow: hidden;
     pointer-events: none;
     will-change: transform;
-    opacity: 0.06;
   }
-  .hs-layer span {
-    font-size: clamp(48px, 8vw, 120px);
-    font-weight: 700;
-    white-space: nowrap;
-    font-style: italic;
-    letter-spacing: -0.02em;
+  .hs-img {
+    position: absolute;
+    /* 종이에 쓴 사진(어두운 잉크/밝은 종이)을 어두운 배경 위에 얹기: 반전 후 screen 블렌드 */
+    filter: invert(1) contrast(1.15) brightness(1.08);
+    mix-blend-mode: screen;
+    user-select: none;
+    max-width: 46vw;
   }
   .hero-core {
     position: relative;
@@ -704,13 +701,28 @@ const GAL_COLORS = [
   "#5a3a6c","#6c4a3a","#3a6c5a","#4a4a5a","#6c3a3a"
 ];
 
+/* HERO 손글씨 이미지 (assets/gallery). 오타 파일 hreo_3.png 포함. */
+const HERO_IMAGES = ["hero_1.jpg", "hero_2.jpg", "hreo_3.png", "hero_4.jpg", "hero_5.jpg", "hero_6.png", "hero_7.jpg"];
+
 /* ===================== HERO interactions ===================== */
 (function () {
-  // 손글씨 배경 레이어: "진심" 반복 배치 (문장형보다 강한 인상)
+  // 손글씨 배경 레이어: 이미지를 흩뿌려 배치
   const layer = document.getElementById("hsLayer");
-  let html = "";
-  for (let i = 0; i < 60; i++) html += "<span>진심</span>";
-  layer.innerHTML = html;
+  const POS = [
+    { top: 5,  left: 3,  w: 300, rot: -6, op: 0.55 },
+    { top: 11, left: 68, w: 340, rot: 5,  op: 0.5 },
+    { top: 57, left: 2,  w: 290, rot: 4,  op: 0.5 },
+    { top: 62, left: 68, w: 320, rot: -5, op: 0.55 },
+    { top: 1,  left: 39, w: 250, rot: 7,  op: 0.45 },
+    { top: 73, left: 38, w: 280, rot: -4, op: 0.48 },
+    { top: 39, left: 82, w: 220, rot: 3,  op: 0.45 },
+  ];
+  layer.innerHTML = HERO_IMAGES.map(function (name, i) {
+    const p = POS[i % POS.length];
+    const src = "./assets/gallery/" + encodeURIComponent(name);
+    return '<img class="hs-img" src="' + src + '" alt="" style="top:' + p.top + "%;left:" + p.left +
+      "%;width:" + p.w + "px;transform:rotate(" + p.rot + "deg);opacity:" + p.op + '">';
+  }).join("");
 
   const hero = document.getElementById("hero");
   const core = document.getElementById("heroCore");
@@ -920,6 +932,7 @@ document.getElementById("dClose").addEventListener("click", function () {
       if (pp.link && pp.link.image) claimed.add(pp.link.image.split("/").pop());
       (pp.figures || []).forEach(function (f) { if (f.image) claimed.add(f.image.split("/").pop()); });
     });
+    (typeof HERO_IMAGES !== "undefined" ? HERO_IMAGES : []).forEach(function (n) { claimed.add(n); });
 
     // 1) 캡션(활동) 카드 — 여러 미디어 묶음
     let items = captions.map(function (c) {
