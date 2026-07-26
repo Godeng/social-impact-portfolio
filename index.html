@@ -490,11 +490,11 @@
           <div class="proof-label">담당 프로덕트 최대 MAU</div>
           <div class="proof-desc">티맵모빌리티 · 티맵 홈</div>
         </div>
-        <button class="proof-card reveal link" onclick="openDetail(3)">
+        <button class="proof-card reveal link" onclick="openProject('kakao')">
           <div class="proof-num">50<small>%p</small></div>
           <div class="proof-label">담당 프로덕트 최대 수치 상승</div>
           <div class="proof-desc">카카오 T 비즈니스 가입 동선 개편 후, 가입자 가운데 중소기업 비중</div>
-          <div class="proof-cta">Project 04 자세히 →</div>
+          <div class="proof-cta">더 알아보기 →</div>
         </button>
       </div>
     </div>
@@ -502,17 +502,17 @@
     <div class="proof-group">
       <div class="proof-group-label">임팩트 빌딩 경험</div>
       <div class="proof-grid">
-        <button class="proof-card reveal link" onclick="openDetail(1)">
+        <button class="proof-card reveal link" onclick="openProject('wbc')">
           <div class="proof-num">124<small>명</small></div>
           <div class="proof-label">운영 담당 오프라인 행사 참가자 수</div>
           <div class="proof-desc">WBC 리트릿캠프 · 2025</div>
-          <div class="proof-cta">Project 02 자세히 →</div>
+          <div class="proof-cta">더 알아보기 →</div>
         </button>
-        <button class="proof-card reveal link" onclick="openDetail(0)">
+        <button class="proof-card reveal link" onclick="openProject('uz')">
           <div class="proof-num">80<small>%</small></div>
           <div class="proof-label">참여자 설문 최대 긍정 답변 비중</div>
           <div class="proof-desc">우즈베키스탄 놀이터 개편 후, 부문별 만족도</div>
-          <div class="proof-cta">Project 01 자세히 →</div>
+          <div class="proof-cta">더 알아보기 →</div>
         </button>
       </div>
     </div>
@@ -721,6 +721,17 @@ const PROJECTS = [
       "런칭 1개월 후 전체 가입자 중 개인사업자 비중이 전월 대비 50%p 상승했습니다. 3년간 가입자는 신규 서비스 런칭 때만 늘던 패턴이었는데, 이 프로젝트는 신규 런칭 없이 기존 기능 개선만으로 그 효과를 넘어섰습니다. 이후 저는 프로젝트를 시작하기 전 비공식이라도 유저 인터뷰를 꼭 진행하고, 얻은 인사이트를 유관 부서에 공유합니다.",
   },
 ];
+
+/* 프로젝트 표시 순서 (id 기준). 순서를 바꾸려면 이 배열만 수정하면 됨. */
+PROJECTS.sort(function (a, b) {
+  const order = ["wbc", "uz", "kakao", "barogo"];
+  return order.indexOf(a.id) - order.indexOf(b.id);
+});
+/* id로 상세 열기 — 순서가 바뀌어도 링크가 안 깨짐 */
+function openProject(id) {
+  const i = PROJECTS.findIndex(function (p) { return p.id === id; });
+  if (i >= 0) openDetail(i);
+}
 
 /* 갤러리 콘텐츠는 코드가 아니라 저장소의 assets/gallery 폴더에서 읽어옵니다.
    - 사진 추가: 그 폴더에 이미지 업로드(모바일 GitHub) → 자동 반영
