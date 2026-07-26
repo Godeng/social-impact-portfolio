@@ -106,6 +106,7 @@
     text-align: center;
     will-change: transform;
   }
+  .hero-hand { display: block; width: min(760px, 84vw); height: auto; margin: 0 auto; }
   .hero-word {
     font-size: clamp(40px, 8.5vw, 112px);
     font-weight: 800;
@@ -466,7 +467,7 @@
 <header id="hero">
   <div class="hs-layer" id="hsLayer"></div>
   <div class="hero-core" id="heroCore">
-    <div class="hero-word">사람이 보이는 기획</div>
+    <img class="hero-hand" src="./assets/gallery/hero_text_t.png" alt="사람이 보이는 기획" />
   </div>
   <div class="hero-hint" id="heroHint">CLICK</div>
 </header>
@@ -1094,6 +1095,7 @@ window.addEventListener("popstate", function () {
       (pp.figures || []).forEach(function (f) { if (f.image) claimed.add(f.image.split("/").pop()); });
     });
     (typeof HERO_IMAGES !== "undefined" ? HERO_IMAGES : []).forEach(function (n) { claimed.add(n); });
+    ["hero_text.png", "hero_text_t.png"].forEach(function (n) { claimed.add(n); });
 
     // 1) 캡션(활동) 카드 — 여러 미디어 묶음
     let items = captions.map(function (c) {
