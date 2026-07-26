@@ -196,7 +196,16 @@
   }
   .proof-num small { font-size: 0.42em; font-weight: 700; margin-left: 2px; }
   .proof-label { margin-top: 18px; font-weight: 600; font-size: 16px; }
-  .proof-desc { margin-top: 6px; font-size: 14px; color: var(--ink-soft); }
+  .proof-desc { margin-top: 6px; font-size: 14px; color: var(--ink-soft); line-height: 1.55; }
+  .proof-group + .proof-group { margin-top: 44px; }
+  .proof-group-label { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 14px; padding-left: 12px; border-left: 3px solid var(--ink); }
+  .proof-card.link {
+    cursor: pointer; text-align: left; font-family: inherit; border: none; width: 100%; display: block;
+    transition: background .2s, transform .2s;
+  }
+  .proof-card.link:hover { background: #e8e2d6; transform: translateY(-2px); }
+  .proof-cta { margin-top: 16px; font-size: 12.5px; font-weight: 600; color: var(--ink-faint); }
+  .proof-card.link:hover .proof-cta { color: var(--ink-soft); }
 
   /* ---------- PROJECTS ---------- */
   .proj-list { display: flex; flex-direction: column; }
@@ -439,7 +448,7 @@
 <section class="block" id="why">
   <div class="wrap">
     <div class="sec-head" style="margin-bottom:22px"><span class="eyebrow">Why</span></div>
-    <p class="why-lead">100만명 대상의 문제 해결 경험을, <span class="accent">눈을 바라볼 수 있는 사람</span>에게로.</p>
+    <p class="why-lead">100만명 대상의 문제 해결 경험을,<br /><span class="accent">눈을 바라볼 수 있는 사람</span>에게로.</p>
     <div class="why-grid">
       <div>
         <p class="why-body" style="margin-top:0">
@@ -470,18 +479,41 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Proof points</span>
-      <h2>말보다, 숫자로 남은 것들.</h2>
+      <h2>데이터로 보는 경력 요약</h2>
     </div>
-    <div class="proof-grid">
-      <div class="proof-card reveal">
-        <div class="proof-num">80<small>점+</small></div>
-        <div class="proof-label">개소식 만족도</div>
-        <div class="proof-desc">우즈베키스탄 아동 놀이공간 개소식 현장 만족도</div>
+
+    <div class="proof-group">
+      <div class="proof-group-label">PM 경력</div>
+      <div class="proof-grid">
+        <div class="proof-card reveal">
+          <div class="proof-num">1,562<small>만명</small></div>
+          <div class="proof-label">담당 프로덕트 최대 MAU</div>
+          <div class="proof-desc">티맵모빌리티 · 티맵 홈</div>
+        </div>
+        <button class="proof-card reveal link" onclick="openDetail(3)">
+          <div class="proof-num">50<small>%p</small></div>
+          <div class="proof-label">담당 프로덕트 최대 수치 상승</div>
+          <div class="proof-desc">카카오 T 비즈니스 가입 동선 개편 후, 가입자 가운데 중소기업 비중</div>
+          <div class="proof-cta">Project 04 자세히 →</div>
+        </button>
       </div>
-      <div class="proof-card reveal">
-        <div class="proof-num">1<small>년 후</small></div>
-        <div class="proof-label">지역 유동인구 활성화</div>
-        <div class="proof-desc">공간 조성 1년 뒤 주변 지역 활성화로 이어짐</div>
+    </div>
+
+    <div class="proof-group">
+      <div class="proof-group-label">임팩트 빌딩 경험</div>
+      <div class="proof-grid">
+        <button class="proof-card reveal link" onclick="openDetail(1)">
+          <div class="proof-num">124<small>명</small></div>
+          <div class="proof-label">운영 담당 오프라인 행사 참가자 수</div>
+          <div class="proof-desc">WBC 리트릿캠프 · 2025</div>
+          <div class="proof-cta">Project 02 자세히 →</div>
+        </button>
+        <button class="proof-card reveal link" onclick="openDetail(0)">
+          <div class="proof-num">80<small>%</small></div>
+          <div class="proof-label">참여자 설문 최대 긍정 답변 비중</div>
+          <div class="proof-desc">우즈베키스탄 놀이터 개편 후, 부문별 만족도</div>
+          <div class="proof-cta">Project 01 자세히 →</div>
+        </button>
       </div>
     </div>
   </div>
