@@ -405,6 +405,8 @@
   .d-youtube { position: relative; margin-top: 16px; aspect-ratio: 16 / 9; border-radius: 6px; overflow: hidden; background: #000; }
   .d-youtube iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .d-youtube-cap { margin-top: 8px; font-size: 12.5px; color: var(--ink-faint); }
+  .d-linkbtn { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; background: var(--ink); color: var(--bg); font-weight: 700; font-size: 14px; padding: 11px 20px; border-radius: 999px; text-decoration: none; transition: transform .2s; }
+  .d-linkbtn:hover { transform: translateX(3px); }
   .d-linkcard { position: relative; margin-top: 16px; border-radius: 8px; overflow: hidden; min-height: 340px; display: flex; align-items: flex-end; color: #fff; background: #1c1a17; }
   .d-linkcard .lc-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
   .d-linkcard::before { content: ""; position: absolute; inset: 0; background: linear-gradient(155deg, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.82) 100%); z-index: 1; }
@@ -621,7 +623,7 @@ const PROJECTS = [
     teaser: "어린이들이 놀이터 개편의 주체가 되도록, 어린이의 설문 결과를 바탕으로 권리의 공간을 만들었습니다.",
     signature: "임팩트, 어린이",
     media: ["1753427515512.jpg", "20250729_173853.jpg", "20250807_135241.jpg"],
-    youtube: { id: "fO0JXil0Qrg", start: 1730, cap: "서울시 청년 해외봉사단 3기 in 우즈베키스탄, 라오스 (28:50부터)" },
+    youtube: { id: "fO0JXil0Qrg", start: 1730, cap: "서울시 청년 해외봉사단 3기 in 우즈베키스탄, 라오스 (28:50부터)", button: { label: "google maps에서 놀이터 바로가기", url: "https://maps.app.goo.gl/WftNHieWo7QSt7PV9" } },
     badges: [
       { n: "80점+", l: "개소식 만족도" },
       { n: "1년", l: "후 지역 유동인구 활성화" },
@@ -648,7 +650,7 @@ const PROJECTS = [
     teaser: "당사자이자 기획자로서, 참여자가 운영진과 함께 도전할 수 있는 프로그램을 설계했습니다.",
     signature: "임팩트, 여성",
     media: ["20260621_140937.mp4", "1782049123480.jpg", "Screenshot_20260715_000550_Instagram.jpg", "1780150303800.JPG", "1780719835308.jpg"],
-    youtube: { id: "yJdAJFnMXAU", cap: "2025 리트릿게더링 (우먼스베이스캠프)" },
+    youtube: { id: "yJdAJFnMXAU", cap: "2025 리트릿게더링 (우먼스베이스캠프)", button: { label: "우먼스베이스캠프 리트릿캠프 공식 홈페이지 바로가기", url: "https://www.womensbasecamp.com/Festival" } },
     badges: [
       { n: "참여자→리더", l: "커뮤니티 내 역할 전환" },
       { n: "리트릿캠프", l: "운영·기획 주도" },
@@ -850,8 +852,11 @@ function detailYouTubeHTML(p) {
   if (!p.youtube || !p.youtube.id) return "";
   const q = "?rel=0" + (p.youtube.start ? "&start=" + p.youtube.start : "");
   const cap = p.youtube.cap ? '<div class="d-youtube-cap">▶ ' + p.youtube.cap + "</div>" : "";
+  const btn = p.youtube.button
+    ? '<div><a class="d-linkbtn" href="' + p.youtube.button.url + '" target="_blank" rel="noopener">' + p.youtube.button.label + " →</a></div>"
+    : "";
   return '<div class="d-youtube"><iframe src="https://www.youtube.com/embed/' + p.youtube.id + q +
-    '" title="' + (p.title || "") + '" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>' + cap;
+    '" title="' + (p.title || "") + '" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>' + cap + btn;
 }
 
 // 라벨 달린 도판 묶음(변화 방향 등). figures: [{label, image}]
@@ -886,11 +891,13 @@ function openDetail(i) {
   detailInner.innerHTML =
     '<div class="d-role"><b>' + p.role + "</b><span>·</span><span>" + p.period + "</span></div>" +
     "<h2>" + splitTitle(p.title).name + "</h2>" +
-    '<div class="badges">' +
-      p.badges.map(function (b) {
-        return '<div class="badge"><div class="b-num">' + b.n + '</div><div class="b-lab">' + b.l + "</div></div>";
-      }).join("") +
-    "</div>" +
+    detailYouTubeHTML(p) +
+    (p.youtube ? "" :
+      '<div class="badges">' +
+        p.badges.map(function (b) {
+          return '<div class="badge"><div class="b-num">' + b.n + '</div><div class="b-lab">' + b.l + "</div></div>";
+        }).join("") +
+      "</div>") +
     '<div class="d-block"><div class="lab">문제 정의 · 현장/데이터</div><p>' + p.problem + "</p></div>" +
     '<div class="d-block">' +
       '<div class="lab">가설검증 방식의 전환</div>' +
@@ -904,7 +911,6 @@ function openDetail(i) {
       p.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") +
     "</ol></div>" +
     '<div class="d-block"><div class="lab">성과</div><p>' + p.outcome + "</p>" +
-      detailYouTubeHTML(p) +
       detailLinkHTML(p) +
       detailFiguresHTML(p) +
       detailMediaHTML(p) +
