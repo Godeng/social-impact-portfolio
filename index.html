@@ -145,13 +145,14 @@
 
   /* ---------- SECTION shell ---------- */
   section.block { padding: 120px 0; border-top: 1px solid var(--line); }
-  .sec-head { max-width: 720px; margin-bottom: 56px; }
+  .sec-head { max-width: 900px; margin-bottom: 56px; }
   .sec-head h2 {
     font-size: clamp(28px, 4.2vw, 46px);
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.2;
     margin-top: 14px;
+    text-wrap: balance;
   }
   .accent { color: var(--coral); }
 
@@ -161,7 +162,7 @@
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.32;
-    max-width: 16ch;
+    text-wrap: balance;
   }
   #why .why-body {
     margin-top: 40px;
@@ -302,7 +303,7 @@
 
   /* ---------- FOOTER ---------- */
   footer { padding: 90px 0 70px; border-top: 1px solid var(--line); }
-  footer h4 { font-size: clamp(24px, 4vw, 40px); font-weight: 700; letter-spacing: -0.03em; max-width: 20ch; }
+  footer h4 { font-size: clamp(24px, 4vw, 40px); font-weight: 700; letter-spacing: -0.03em; max-width: 20ch; text-wrap: balance; }
   footer .foot-links { margin-top: 30px; display: flex; gap: 20px; flex-wrap: wrap; font-size: 14px; }
   footer a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
   footer a:hover { border-color: var(--ink); }
@@ -442,7 +443,7 @@
     <div class="sec-head"><span class="eyebrow">Why</span></div>
     <div class="why-grid">
       <div>
-        <p class="why-lead">100만명 대상의 문제 해결 경험을,<br /><span class="accent">눈을 바라볼 수 있는 사람</span>에게로.</p>
+        <p class="why-lead">100만명 대상의 문제 해결 경험을, <span class="accent">눈을 바라볼 수 있는 사람</span>에게로.</p>
         <p class="why-body">
           티맵모빌리티, 카카오모빌리티, 바로고에서 서비스를 기획했습니다.
           배달 접수 화면부터 홈 화면까지 트래픽이 많은 서비스를 다루어
@@ -493,7 +494,7 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Projects</span>
-      <h2>문제정의(현장) → 가설 → 현장실험·검증 → 성과.<br />반복되는 저의 방식입니다.</h2>
+      <h2>문제정의(현장) → 가설 → 현장실험·검증 → 성과. 반복되는 저의 방식입니다.</h2>
     </div>
     <div class="proj-list" id="projList"><!-- injected --></div>
   </div>
