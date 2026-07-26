@@ -652,8 +652,8 @@ const PROJECTS = [
   {
     id: "wbc",
     title: "우먼스베이스캠프(WBC) 운영진 — 100명 대상의 리트릿캠프, 모험버킷 프로그램 기획·운영",
-    role: "프로그램 기획 · 운영 · 리딩",
-    period: "2025 여름 ~ 2026 봄",
+    role: "2025, 2026년 운영진 참여 (프로그램 기획 및 현장 운영)",
+    period: "",
     teaser: "당사자이자 기획자로서, 참여자가 운영진과 함께 도전할 수 있는 프로그램을 설계했습니다.",
     signature: "임팩트, 여성",
     media: ["20260621_140937.mp4", "1782049123480.jpg", "Screenshot_20260715_000550_Instagram.jpg", "1780150303800.JPG", "1780719835308.jpg"],
@@ -663,18 +663,20 @@ const PROJECTS = [
       { n: "리트릿캠프", l: "운영·기획 주도" },
       { n: "러닝", l: "모험버킷 프로그램 리딩" },
     ],
-    problem:
-      "체력·경험의 한계로 도전을 미뤄온 사람들에게는 '나도 할 수 있다'를 스스로 경험할 장이 필요했습니다. 정해진 것을 따라오게 하는 방식으로는 그 주체성이 생기지 않았습니다.",
-    before: "정해진 커리큘럼을 따라오게 하는 일방적 방식",
-    after: "참여자가 자기 목표(모험버킷)를 세우고 스스로 달성하게 하는 경험 설계",
-    steps: [
-      "먼저 참여자로 직접 경험 — WBC 모험학교에서 한라산·백패킹에 도전",
-      "리트릿캠프 운영을 기획하며 참여자에서 기획자로 전환",
-      "모험버킷 러닝 프로그램을 설계하고 직접 리딩",
-      "참여자의 주체성·책임감을 중심에 둔 운영으로 반복 개선",
+    summary: "연대와 모험심을 깨운다는 'Wake the wild'를 기조로, 참가자들이 함께 만드는 '게더링' 형식으로 운영했습니다.",
+    background: "종전 3년간의 리트릿캠프에서, 단방향 프로그램(강연·공연 등)보다 상호작용형 프로그램의 긍정 평가가 높았습니다.",
+    problem: "",
+    hypothesis: "스태프와 참가자가 분리되지 않고 함께 만들어가는 '의도적 공백'을 배치하면, 청년이 스스로 주체성과 책임감을 발휘해 진짜 연결을 만들어낼 것이다.",
+    solution: "'함께 만드는 축제(게더링)' 설계 — 완성품을 소비하게 하는 대신, 서로의 땀과 체온을 느끼며 함께 채워가는 참여형 동선과 프로그램 환경을 조성했습니다.",
+    validation: [
+      "현장 위기 상황에서의 가설 검증(실험): 행사 중 참가자 한 명의 행방이 미확인되는 돌발 상황이 발생했습니다. 통제나 인위적 수색 매뉴얼 대신 축적된 신뢰와 '의도적 공백'을 적용하자, 참가자들이 자발적으로 역할(수색·인원 파악·마음 다독임 등)을 나누어 해결했습니다.",
+      "현장 중심의 유연한 기획 수정: 행방 확인 후 정형화된 프로그램(재능 카드)을 강행하지 않고, 참가자들이 서로를 바라보며 자발적으로 재능과 대화를 나눌 여백을 유지했습니다.",
     ],
-    outcome:
-      "참여자 → 기획자 → 프로그램을 이끄는 리더로. 회사 밖에서 '경험이 사람을 바꾼다'는 방식을 직접 설계하고 운영했습니다.",
+    outcome: [
+      "자발적 네트워크 형성: 인위적 장치 없이도 참가자들이 서로의 존재에 감사하고 재능을 나누며, 목표했던 '지속 가능한 후속 관계 형성'을 달성했습니다.",
+      "프로그램 모델 확장: 서로의 부족함을 채워주는 구조를 입증해, 10km 완주 프로그램(모험버킷)·정상 등반 프로그램(모험학교) 등 주체적 커뮤니티 모델로 확장했습니다.",
+    ],
+    insight: "청년 대상 기획의 본질은 '완성된 프로그램의 수혜자'로 남게 하는 것이 아니라, 스스로 기여할 수 있는 '의도적인 공백'과 '신뢰의 환경'을 설계하는 것입니다.",
   },
   {
     id: "barogo",
@@ -895,9 +897,13 @@ function openDetail(i) {
   const p = PROJECTS[i];
   const next = PROJECTS[(i + 1) % PROJECTS.length];
   dBarLabel.textContent = "Project 0" + (i + 1) + " / 0" + PROJECTS.length;
-  function pEl(t) { return t ? "<p>" + t + "</p>" : ""; }
+  function pBlock(v) {
+    if (!v) return "";
+    if (Array.isArray(v)) return v.map(function (t) { return t ? "<p>" + t + "</p>" : ""; }).join("");
+    return "<p>" + v + "</p>";
+  }
   const roleLine = p.role + (p.period ? " · " + p.period : "");
-  const solutionHTML = p.solution ? "<p>" + p.solution + "</p>"
+  const solutionHTML = p.solution ? pBlock(p.solution)
     : (p.steps ? '<ol class="steps">' + p.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + "</ol>" : "");
   detailInner.innerHTML =
     "<h2>" + splitTitle(p.title).name + "</h2>" +
@@ -910,25 +916,25 @@ function openDetail(i) {
       "</div>") +
 
     '<div class="d-sec"><h3 class="d-sec-title">프로젝트 개요</h3>' +
-      pEl(p.summary || p.teaser) +
+      pBlock(p.summary || p.teaser) +
       '<p class="d-meta">' + roleLine + "</p>" +
     "</div>" +
 
     '<div class="d-sec"><h3 class="d-sec-title">문제 정의</h3>' +
-      pEl(p.background) +
-      pEl(p.problem) +
-      pEl(p.hypothesis || p.after) +
+      pBlock(p.background) +
+      pBlock(p.problem) +
+      pBlock(p.hypothesis || p.after) +
     "</div>" +
 
     '<div class="d-sec"><h3 class="d-sec-title">해결책</h3>' +
       solutionHTML +
-      pEl(p.validation) +
+      pBlock(p.validation) +
       detailFiguresHTML(p) +
     "</div>" +
 
     '<div class="d-sec"><h3 class="d-sec-title">성과</h3>' +
-      pEl(p.outcome) +
-      pEl(p.insight) +
+      pBlock(p.outcome) +
+      pBlock(p.insight) +
       detailLinkHTML(p) +
       detailMediaHTML(p) +
     "</div>" +
