@@ -923,15 +923,38 @@ function openDetail(i) {
     openDetail(parseInt(e.currentTarget.dataset.next, 10));
     detail.scrollTop = 0;
   });
+  const wasOpen = detail.classList.contains("open");
   detail.classList.add("open");
   document.body.style.overflow = "hidden";
   detail.scrollTop = 0;
+  // 오버레이가 처음 열릴 때만 히스토리 항목 추가 → 브라우저 뒤로가기로 닫기
+  if (!wasOpen) {
+    history.pushState({ detailOpen: true }, "");
+  }
 }
-document.getElementById("dClose").addEventListener("click", function () {
+
+/* 오버레이 DOM만 닫기(히스토리 조작 없이) */
+function closeDetailDOM() {
   detail.classList.remove("open");
   document.body.style.overflow = "";
   detailInner.querySelectorAll("video").forEach(function (v) { v.pause(); });
   detailInner.querySelectorAll("iframe").forEach(function (f) { f.src = f.src; }); // 유튜브 정지
+}
+
+document.getElementById("dClose").addEventListener("click", function () {
+  // 닫기 버튼도 히스토리를 되돌려(back) 상태를 깔끔히 정리 → popstate가 실제 닫기 수행
+  if (history.state && history.state.detailOpen) {
+    history.back();
+  } else {
+    closeDetailDOM();
+  }
+});
+
+// 브라우저 뒤로가기(또는 위 history.back) → 오버레이가 열려 있으면 닫고 메인으로
+window.addEventListener("popstate", function () {
+  if (detail.classList.contains("open")) {
+    closeDetailDOM();
+  }
 });
 
 /* ===================== Gallery (저장소 폴더에서 로드) ===================== */
