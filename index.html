@@ -393,6 +393,8 @@
   .d-sub { margin-top: 18px; }
   .d-sub-h { font-size: 15.5px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
   .d-sub p { margin-top: 5px; font-size: 15.5px; color: var(--ink-soft); line-height: 1.72; }
+  .fu-role { font-size: 13px; color: var(--ink-faint); margin-top: 6px; }
+  .d-sub .d-media, .d-sub .d-linkbtn { margin-top: 14px; }
   .d-sub-list { margin-top: 7px; padding-left: 18px; }
   .d-sub-list li { list-style: disc; font-size: 15px; color: var(--ink-soft); line-height: 1.7; margin-top: 5px; }
   .d-sub-list li::marker { color: var(--ink-faint); }
@@ -684,8 +686,13 @@ const PROJECTS = [
     period: "",
     teaser: "당사자이자 기획자로서, 참여자가 운영진과 함께 도전할 수 있는 프로그램을 설계했습니다.",
     signature: "임팩트, 여성",
-    media: ["20260621_140937.mp4", "1782049123480.jpg", "Screenshot_20260715_000550_Instagram.jpg", "1780150303800.JPG", "1780719835308.jpg"],
     youtube: { id: "yJdAJFnMXAU", cap: "2025 리트릿게더링 (우먼스베이스캠프)", button: { label: "우먼스베이스캠프 리트릿캠프 공식 홈페이지 바로가기", url: "https://www.womensbasecamp.com/Festival" } },
+    followup: [
+      { h: "모험버킷", desc: "참여자가 운영진과 함께 목표를 이뤄 나가는 프로그램.", role: "러닝 프로그램 리딩, 졸업파티 플리마켓",
+        media: ["20260621_140937.mp4", "1782049123480.jpg", "Screenshot_20260715_000550_Instagram.jpg", "1780150303800.JPG", "1780719835308.jpg"] },
+      { h: "2026 리트릿캠프", desc: "관계성의 회복을 모토로 한 리트릿 프로그램. 준비·모집 중입니다.", role: "리트릿캠프 기획 스탭",
+        link: { label: "2026 리트릿캠프 신청 페이지 보기", url: "https://www.womensbasecamp.com/shop_view?idx=38" } }
+    ],
     badges: [
       { n: "참여자→리더", l: "커뮤니티 내 역할 전환" },
       { n: "리트릿캠프", l: "운영·기획 주도" },
@@ -947,6 +954,28 @@ function detailLinkHTML(p) {
     "</div></div>";
 }
 
+// 후속 프로그램 섹션. followup: [{h, desc, role, media:[...], link:{label,url}}]
+function detailFollowupHTML(p) {
+  if (!p.followup || !p.followup.length) return "";
+  const items = p.followup.map(function (f) {
+    const desc = f.desc ? "<p>" + f.desc + "</p>" : "";
+    const role = f.role ? '<div class="fu-role">역할 · ' + f.role + "</div>" : "";
+    let media = "";
+    if (f.media && f.media.length) {
+      media = '<div class="d-media">' + f.media.map(function (name) {
+        const src = "./" + GALLERY_DIR + "/" + name.split("/").map(encodeURIComponent).join("/");
+        if (/\.(mp4|webm|mov|m4v)$/i.test(name)) {
+          return '<video class="d-mediaitem d-mediavid" src="' + src + '" muted loop playsinline controls preload="metadata"></video>';
+        }
+        return '<img class="d-mediaitem" src="' + src + '" alt="" onerror="this.remove()">';
+      }).join("") + "</div>";
+    }
+    const link = f.link ? '<div><a class="d-linkbtn" href="' + f.link.url + '" target="_blank" rel="noopener">' + f.link.label + " →</a></div>" : "";
+    return '<div class="d-sub"><div class="d-sub-h">' + f.h + "</div>" + desc + role + media + link + "</div>";
+  }).join("");
+  return '<div class="d-sec"><h3 class="d-sec-title">후속 프로그램</h3>' + items + "</div>";
+}
+
 function openDetail(i) {
   const p = PROJECTS[i];
   const next = PROJECTS[(i + 1) % PROJECTS.length];
@@ -1002,6 +1031,7 @@ function openDetail(i) {
       detailLinkHTML(p) +
       detailMediaHTML(p) +
     "</div>" +
+    detailFollowupHTML(p) +
 
     '<div class="d-next" data-next="' + ((i + 1) % PROJECTS.length) + '">' +
       '<div><div class="lab2">NEXT PROJECT</div><div class="nm">' + splitTitle(next.title).name + "</div></div>" +
