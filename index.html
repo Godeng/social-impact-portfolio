@@ -191,7 +191,15 @@
     background: var(--bg-soft);
     padding: 44px 34px;
     border-radius: 4px;
+    position: relative;
+    overflow: hidden;
   }
+  .proof-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .proof-card.with-img::after {
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(100deg, rgba(247,245,241,0.95) 44%, rgba(247,245,241,0.5) 100%);
+  }
+  .proof-card.with-img > *:not(.proof-img) { position: relative; z-index: 2; }
   .proof-num {
     font-size: clamp(44px, 6vw, 68px);
     font-weight: 800;
@@ -313,11 +321,7 @@
   .gal-loading { grid-column: 1 / -1; color: var(--ink-faint); font-size: 14px; padding: 30px 0; }
   .gal-cap { position: relative; z-index: 2; width: 100%; }
   .gal-cap .t { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; }
-  .gal-cap .meta {
-    font-size: 12px; opacity: 0; max-height: 0; overflow: hidden;
-    transition: opacity .3s, max-height .3s, margin .3s;
-  }
-  .gal-item.open .gal-cap .meta { opacity: 0.92; max-height: 60px; margin-top: 6px; }
+  .gal-cap .meta { font-size: 12px; opacity: 0.92; margin-top: 6px; }
   .gal-tag { position: absolute; top: 12px; left: 12px; z-index: 2; font-size: 11px; letter-spacing: .04em;
     background: rgba(255,255,255,0.16); backdrop-filter: blur(4px); padding: 3px 9px; border-radius: 999px; }
   .gal-empty-note { font-size: 13px; color: var(--ink-faint); margin-top: 20px; }
@@ -533,13 +537,15 @@
     <div class="proof-group">
       <div class="proof-group-label">임팩트 빌딩 경험</div>
       <div class="proof-grid">
-        <button class="proof-card reveal link" onclick="openProject('wbc')">
+        <button class="proof-card reveal link with-img" onclick="openProject('wbc')">
+          <img class="proof-img" src="./assets/gallery/retreatcamp.jpg" alt="" />
           <div class="proof-num">124<small>명</small></div>
           <div class="proof-label">운영 담당 오프라인 행사 참가자 수</div>
           <div class="proof-desc">WBC 리트릿캠프 · 2025</div>
           <div class="proof-cta">더 알아보기 →</div>
         </button>
-        <button class="proof-card reveal link" onclick="openProject('uz')">
+        <button class="proof-card reveal link with-img" onclick="openProject('uz')">
+          <img class="proof-img" src="./assets/gallery/uzplayground.jpg" alt="" />
           <div class="proof-num">80<small>%</small></div>
           <div class="proof-label">참여자 설문 최대 긍정 답변 비중</div>
           <div class="proof-desc">우즈베키스탄 놀이터 개편 후, 부문별 만족도</div>
@@ -581,7 +587,7 @@
   <div class="wrap">
     <div class="sec-head" style="margin-bottom:16px">
       <span class="eyebrow">To. 행복나눔재단</span>
-      <h2>사람을 위한 기획을, <span class="accent">회사에서도</span> 하고 싶다.</h2>
+      <h2>사람을 위한 기획을,<br class="br-m" /> <span class="accent">회사에서도</span> 하고 싶다.</h2>
     </div>
     <p class="apply-lead">행복나눔재단에서 일하고 싶은 이유입니다.</p>
     <div class="pitch-list">
